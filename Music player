@@ -1,0 +1,100 @@
+# import the libraries and modules
+import os
+import pygame
+import tkinter as tk
+from tkinter import filedialog
+from mutagen.id3 import ID3
+
+# initialize pygame mixer
+pygame.mixer.init()
+
+# create a window for the music player
+window = tk.Tk()
+window.title("Music Player")
+window.geometry("400x300")
+
+# create a playlist of songs
+playlist = []
+
+# create a function to choose songs from a directory
+def choose_songs():
+    global playlist
+    directory = filedialog.askdirectory()
+    os.chdir(directory)
+    for file in os.listdir(directory):
+        if file.endswith(".mp3"):
+            playlist.append(file)
+    pygame.mixer.music.load(playlist[0])
+    pygame.mixer.music.play()
+
+# create a function to update the song title label
+def update_title():
+    global playlist
+    global index
+    title["text"] = playlist[index]
+
+# create a function to play the next song
+def next_song():
+    global playlist
+    global index
+    index += 1
+    if index < len(playlist):
+        pygame.mixer.music.load(playlist[index])
+        pygame.mixer.music.play()
+        update_title()
+    else:
+        index = 0
+        pygame.mixer.music.load(playlist[index])
+        pygame.mixer.music.play()
+        update_title()
+
+# create a function to play the previous song
+def previous_song():
+    global playlist
+    global index
+    index -= 1
+    if index >= 0:
+        pygame.mixer.music.load(playlist[index])
+        pygame.mixer.music.play()
+        update_title()
+    else:
+        index = len(playlist) - 1
+        pygame.mixer.music.load(playlist[index])
+        pygame.mixer.music.play()
+        update_title()
+
+# create a function to stop the song
+def stop_song():
+    pygame.mixer.music.stop()
+
+# create a function to pause the song
+def pause_song():
+    pygame.mixer.music.pause()
+
+# create a function to resume the song
+def resume_song():
+    pygame.mixer.music.unpause()
+
+# create buttons and labels for the music player
+choose_button = tk.Button(window, text="Choose Songs", command=choose_songs)
+play_button = tk.Button(window, text="Next", command=next_song)
+previous_button = tk.Button(window, text="Previous", command=previous_song)
+stop_button = tk.Button(window, text="Stop", command=stop_song)
+pause_button = tk.Button(window, text="Pause", command=pause_song)
+resume_button = tk.Button(window, text="Resume", command=resume_song)
+title = tk.Label(window, text="")
+
+# place the buttons and labels on the window
+choose_button.pack()
+play_button.pack()
+previous_button.pack()
+stop_button.pack()
+pause_button.pack()
+resume_button.pack()
+title.pack()
+
+# set the index of the current song to zero
+index = 0
+
+# run the main loop of the music player
+window.mainloop()
