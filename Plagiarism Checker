@@ -1,0 +1,12 @@
+
+from difflib import SequenceMatcher
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+# Example usage
+text1 = "This is a sample text."
+text2 = "This is a similar text."
+
+similarity = similar(text1, text2)
+print(f"The similarity ratio is: {similarity}")
